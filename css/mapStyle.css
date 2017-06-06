@@ -75,7 +75,7 @@ body {
 }
 
 #wrapper {
-    background-image: url(images/copperkeg.jpg);
+    background-image: url( ../assets/copperkeg.jpg);
     margin-top: 19px;
     min-height: 625px;
 }

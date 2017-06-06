@@ -39,29 +39,27 @@ function initMap() {
 			map.setCenter(results[0].geometry.location);
 
 
-			var pubs = new google.maps.InfoWindow();
-			var service = new google.maps.places.PlacesService(map);
+			//var pubs = new google.maps.InfoWindow();
+			v//ar service = new google.maps.places.PlacesService(map);
 
 
-			obj='https://maps.googleapis.com/maps/api/place/textsearch/json?query=pub&location=37.7930,-122.4161&radius=500&key=AIzaSyCpzcx4xPG0GtyMrFs83Mxa0Vm0V4TCyKo';
+			obj='https://maps.googleapis.com/maps/api/place/textsearch/json?query=pub&location=37.7930,-122.4161&radius=500&key=AIzaSyCpzcx4xPG0GtyMrFs83Mxa0Vm0V4TCyKo';			
 
-			console.log(obj);
-
-			function logResults(json){
-				console.log(json);
-			}
-
-			$.ajax({
-				method: "get",
-				contentType : "application/json",
-				url: obj,
-				dataType: "jsonp",
-				jsonpCallback: "logResults"
-			});
+//			function logResults(json){
+//				console.log(json);
+//			}
+//
+//			$.ajax({
+//				method: "get",
+//				contentType : "application/json",
+//				url: obj,
+//				dataType: "jsonp",
+//				jsonpCallback: "logResults"
+//			});
 			
 			
-		bars = new google.maps.InfoWindow();
-		service = new google.maps.places.PlacesService(map);
+		var pubs = new google.maps.InfoWindow();
+		var service = new google.maps.places.PlacesService(map);	
 		
 		service.nearbySearch({
 		  	location: results[0].geometry.location,
@@ -77,7 +75,7 @@ function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
             	createMarker(results[i]); 
-				console.log(results[i]);
+				
         }
     }
 }
@@ -86,7 +84,7 @@ function createMarker(place) {
    var id = place.id;
 	console.log(id);
    var marker = place.location;
-   var image = 'images/beer.png'; 
+   var image = 'assets/beer.png'; 
    marker = new google.maps.Marker({
         map: map,
         position: place.geometry.location,
