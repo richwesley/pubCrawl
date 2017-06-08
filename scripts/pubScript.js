@@ -1,25 +1,53 @@
 // JavaScript Document
 
-var infowindowContent;
+var infowindowContent, pub_id, pubid = [];
 
 
+// Initialize the map to html div
 function initMap() {
+	var  mapstyle = new google.maps.StyledMapType (	
+		[
+	  {
+		"featureType": "road",
+		"stylers": [{"color": "#96e6ed"}]
+	  },
+	  {
+		"featureType": "water",
+		"stylers": [{"color": "#febf00"}]    
+	  }
+	  ],
+	  {name: 'Beer Map'}
+	);
+	
+	// set the inital map.  See css for styling
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 37, lng: -98 },
-        zoom: 4,
+        zoom: 3,
+		mapTypeControlOptions: {
+            mapTypeIds: ['brewStyle']
+		}
     });
+	
+	map.mapTypes.set('brewStyle', mapstyle);
+        map.setMapTypeId('brewStyle');
 
-    input = document.getElementById('chooseCrawlSpace');
+	
+    // get the users selection from html input
+	input = document.getElementById('chooseCrawlSpace');
 
-
+	//use the autocomplete function which displays predictions as user types
     var autocomplete = new google.maps.places.Autocomplete( input, { placeIdOnly: true } );
 		autocomplete.bindTo('bounds', map);
+	
    
     var infowindow = new google.maps.InfoWindow();
     	infowindow.setContent(infowindowContent);
 	
+	
+	//the geocoder section translates the user input to a map geolocation
     var geocoder = new google.maps.Geocoder();
 	
+	//if the user changes location make the changes
     autocomplete.addListener('place_changed', function() {
         infowindow.close();
         var place = autocomplete.getPlace();
@@ -27,7 +55,8 @@ function initMap() {
         if (!place.place_id) {
             return;
         }
- 
+ 		
+		//check to make sure the user chooses a legit place and not Hogwarts
 		geocoder.geocode({ 'placeId': place.place_id }, function(results, status) {
 
 			if (status !== 'OK') {
@@ -35,70 +64,80 @@ function initMap() {
 				return;
             	}
 		
+			//set the new map
 			map.setZoom(14);
 			map.setCenter(results[0].geometry.location);
-
-
-			//var pubs = new google.maps.InfoWindow();
-			v//ar service = new google.maps.places.PlacesService(map);
-
-
-			obj='https://maps.googleapis.com/maps/api/place/textsearch/json?query=pub&location=37.7930,-122.4161&radius=500&key=AIzaSyCpzcx4xPG0GtyMrFs83Mxa0Vm0V4TCyKo';			
-
-//			function logResults(json){
-//				console.log(json);
-//			}
-//
-//			$.ajax({
-//				method: "get",
-//				contentType : "application/json",
-//				url: obj,
-//				dataType: "jsonp",
-//				jsonpCallback: "logResults"
-//			});
 			
 			
-		var pubs = new google.maps.InfoWindow();
-		var service = new google.maps.places.PlacesService(map);	
-		
-		service.nearbySearch({
+			var service = new google.maps.places.PlacesService(map);
+			
+			// nerbySearch "locates" places within the users location choice
+			//find pubs in users location choice within 500 (meters?)
+			service.nearbySearch({
 		  	location: results[0].geometry.location,
 		  	radius: 500,
 		  	name: 'pub'
 		}, callback);
+			
+		// getDetails allows you to get more detailed info on the pubs
 		
-	 });
-  });
-}
-
+		service.getDetails({
+			placeId: '6292d7c1931f4e53a29d3b4230048a2a30cc1111'
+		}, placeid);
+			console.log(place);
+						  
+		
+			
+		console.log(pubid);
+							
+		});	//placeid geocode
+	});//"place-changed function
+}//initMap
+	
+									 
+//Iterate through all the pubs and send to createMarker
 function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-            	createMarker(results[i]); 
-				
-        }
-    }
+        for (var i = 0; i < results.length; i++) {			
+               createMarker(results[i]); 
+		       placeid(results[i]);
+			
+			//	console.log(results[0].photos[0].getUrl({maxWidth: 400, maxHeight: 400}));
+		}			             
+    }																					
 }
+
+function placeid (place) {
+//	pub_id = place.id;
+	pubid.push(place.id);
 	
+}
+
+//console.log(place.id);
+//create the markers for each pub
 function createMarker(place) {
-   var id = place.id;
-	console.log(id);
+   var pubs = new google.maps.InfoWindow(); 	
    var marker = place.location;
-   var image = 'assets/beer.png'; 
+   var image = 'assets/beer.png';
+      
    marker = new google.maps.Marker({
         map: map,
         position: place.geometry.location,
 		icon: image,
 		animation: google.maps.Animation.DROP,  
-        title: place.name        
-    });	
+        title: place.name       
+    });
 
-    google.maps.event.addListener(marker, 'click', function() {
-        pubs.setContent(place.name);
-        pubs.open(map, this);
+	 //if user put mouse on a marker, reval the pub name
+	 google.maps.event.addListener(marker, 'mouseover', function() {		
+        pubs.setContent(place.id);       
+    });
+		
+	//send pub detail to cards when user clicks on a marker
+	google.maps.event.addListener(marker, 'click', function() {		      
+        $('#pubCard').append(place.id + '<br>' + place.vicinity + '<br>' + "Rating " + place.rating);
     });
 	
-	
-	document.getElementById('#photo');
-}
+}// createMarker
+
 

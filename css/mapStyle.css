@@ -6,13 +6,17 @@
 	height: 50%;
 	width: 50%;
 	min-height: 314px;
-	min-width: 574px;
+	min-width: 582px;
 	margin-left: 36px;
 	margin-top: 20px;
 	margin-bottom: 21px;
 	border-radius: 6px;
 	opacity: 1;
 }
+#authentication {
+	min-height: 50px;
+}
+
 
 
 /* Optional: Makes the sample page fill the window. */
@@ -78,4 +82,12 @@ body {
     background-image: url( ../assets/copperkeg.jpg);
     margin-top: 19px;
     min-height: 625px;
+}
+#pubCard {
+	border: medium solid #9F9E20;
+	background-color: #F4F2B9;
+	color: #000000;
+}
+#wallaby {
+	opacity: 0.333;
 }
