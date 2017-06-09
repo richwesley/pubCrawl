@@ -1,6 +1,6 @@
 // JavaScript Document
 
-var infowindowContent, pub_id, pubid = [];
+var infowindowContent, service, pub_id, pubid = [];
 
 
 // Initialize the map to html div
@@ -13,7 +13,7 @@ function initMap() {
 	  },
 	  {
 		"featureType": "water",
-		"stylers": [{"color": "#febf00"}]    
+		"stylers": [{"color": "#9F9E20"}]    
 	  }
 	  ],
 	  {name: 'Beer Map'}
@@ -83,8 +83,8 @@ function initMap() {
 		
 		service.getDetails({
 			placeId: '6292d7c1931f4e53a29d3b4230048a2a30cc1111'
-		}, placeid);
-			console.log(place);
+		},callback);
+			
 						  
 		
 			
@@ -110,7 +110,7 @@ function callback(results, status) {
 function placeid (place) {
 //	pub_id = place.id;
 	pubid.push(place.id);
-	
+	console.log(place);
 }
 
 //console.log(place.id);
